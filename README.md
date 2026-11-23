@@ -1,1 +1,1 @@
-# Ejercicio_Distribuida_Clase
+# distribuida-clases
