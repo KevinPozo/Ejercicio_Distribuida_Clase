@@ -25,6 +25,10 @@ public class AuthorLifecycle {
     @ConfigProperty(name = "quarkus.http.port",defaultValue = "8070")
     Integer appPort;
 
+    @Inject
+    @ConfigProperty(name = "app.name")
+    String appName;
+
 public void init(@Observes StartupEvent event, Vertx vertx){
     System.out.println("AuthorLifecycle.init() called");
     try {
@@ -32,11 +36,19 @@ public void init(@Observes StartupEvent event, Vertx vertx){
                 .setHost(consulHost)
                 .setPort(consulPort);
 
-        ConsulClient clint = ConsulClient.create(vertx,options);
+        ConsulClient client = ConsulClient.create(vertx,options);
+        String ipAddress = "127.0.0.1";
+
+        String serviceID = "%s-%s:%d".formatted(appName,appPort);
+
         ServiceOptions serviceOptions = new ServiceOptions()
-                .setName("app-authors")
-                .setAddress("127.0.0.1")
+                .setName(appName)
+                .setAddress(ipAddress)
                 .setPort(appPort);
+
+        client.registerService(serviceOptions)
+                .onSuccess(it-> System.out.println("Service registered with consul: "+serviceID))
+                .onFailure(it-> System.out.println("Service registration failed: "+it.getMessage()));
 
     }catch (Exception e){
         e.printStackTrace();
