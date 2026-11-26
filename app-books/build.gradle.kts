@@ -33,7 +33,10 @@ dependencies {
     implementation("io.quarkus:quarkus-rest-client")
     //Service discovery
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-consul-client")
-
+    //Balanceador de carga
+    implementation("io.quarkus:quarkus-smallrye-stork")
+    //Static List
+    testImplementation("io.smallrye.stork:stork-service-discovery-static-list:3.0.0")
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_25
